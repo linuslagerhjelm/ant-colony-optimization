@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class Simulation {
     SimpleWeightedGraph<City, SimpleEdge> g;
     Set<Ant> ants;
+    Tour bestTour;
 
     Simulation() throws IOException {
         TSPFileParser parser = new TSPFileParser();
@@ -39,6 +40,13 @@ public class Simulation {
                 .map(Ant::getTour)
                 .sorted(Comparator.comparing(Tour::tourLength))
                 .collect(Collectors.toList());
+
+        if (bestTour == null) bestTour = tours.get(0);
+
+        if (tours.get(0).tourLength() < bestTour.tourLength()) {
+            bestTour = tours.get(0);
+        }
+
         g.edgeSet().forEach(e -> e.updatePheromone(tours.get(0)));
 
         Optional<Double> min = ants.stream()

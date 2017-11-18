@@ -12,10 +12,11 @@ public class Tour {
     Set<SimpleEdge> edges;
     Set<City> cities;
 
-    Tour() {
+    Tour(City currentCity) {
         edgesOrder = new ArrayList<>();
         edges = new HashSet<>();
         cities = new HashSet<>();
+        cities.add(currentCity);
     }
 
     void add(City from, SimpleEdge edge) {

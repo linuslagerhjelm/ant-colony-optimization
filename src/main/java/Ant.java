@@ -16,7 +16,7 @@ public class Ant {
 
     public Ant(City v) {
         initialCity = currentCity = v;
-        tour = new Tour();
+        tour = new Tour(currentCity);
         random = new Random();
     }
 
