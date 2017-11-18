@@ -1,9 +1,7 @@
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -37,11 +35,16 @@ public class Simulation {
                 ant.move(g.edgeSet());
             }
         }
-        Set<Tour> tours = ants.stream().map(Ant::getTour).collect(Collectors.toSet());
-        g.edgeSet().forEach(e -> e.updatePheromone(tours));
+        List<Tour> tours = ants.stream()
+                .map(Ant::getTour)
+                .sorted(Comparator.comparing(Tour::tourLength))
+                .collect(Collectors.toList());
+        g.edgeSet().forEach(e -> e.updatePheromone(tours.get(0)));
+
         Optional<Double> min = ants.stream()
                 .map(a -> a.getTour().tourLength())
                 .min(Double::compare);
+
         ants.forEach(Ant::resetIteration);
         return min.get();
     }
@@ -57,10 +60,12 @@ public class Simulation {
     public static void main(String[] args) throws IOException {
         MainWindow window = MainWindow.getInstance();
         Simulation s = new Simulation();
-        while (true) {
+        for (int i = 0; i < StaticUtils.maxIter; ++i) {
             window.painGraph(s.getCities(), s.getEdges());
-            System.out.println(s.newIteration());
+            System.out.println(s.newIteration() - StaticUtils.optimal);
         }
+        System.out.println("End");
+        System.exit(0);
     }
 
 }

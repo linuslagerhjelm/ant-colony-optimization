@@ -54,14 +54,10 @@ public class Ant {
     }
 
     private SimpleEdge chooseEdge(Collection<SimpleEdge> feasibleCities) {
-        /*List<SimpleEdge> edges = new ArrayList<>();
+        List<SimpleEdge> edges = new ArrayList<>();
         edges.addAll(feasibleCities);
         Integer idx = random.nextInt(edges.size());
-        return edges.get(idx);*/
-        List<SimpleEdge> sortedWeights = feasibleCities.stream()
-                .sorted(Comparator.comparing(SimpleEdge::getWeight))
-                .collect(Collectors.toList());
-        return sortedWeights.get(0);
+        return edges.get(idx);
     }
 
     private SimpleEdge chooseEdge(NavigableMap<Double, SimpleEdge> probabilities) {

@@ -1,8 +1,6 @@
 
 import org.jgrapht.graph.DefaultEdge;
 
-import java.util.Set;
-
 /**
  * Author: Linus Lagerhjelm
  * File: SimpleEdge
@@ -22,14 +20,16 @@ class SimpleEdge extends DefaultEdge {
         this.end = end;
     }
 
-    void updatePheromone(Set<Tour> tours) {
-        double addedPherm = 0;
-        for (Tour t : tours) {
-            if (t.containsEdge(this)) {
-                addedPherm += StaticUtils.Q / t.tourLength();
-            }
+    void updatePheromone(Tour tour) {
+        Double dT = tour.containsEdge(this) ? tour.tourLength() : 0;
+        Double x = (1 - StaticUtils.EVAP_RATE) * pheromone + dT;
+        if (x > StaticUtils.tMax) {
+            pheromone = StaticUtils.tMax;
+        } else if (x < StaticUtils.tMin) {
+            pheromone = StaticUtils.tMin;
+        } else {
+            pheromone = x;
         }
-        pheromone = (1 - StaticUtils.EVAP_RATE) * pheromone + addedPherm;
     }
 
     Double getWeight() {

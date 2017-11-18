@@ -24,7 +24,7 @@ public class Tour {
         cities.add(from);
     }
 
-    double tourLength() {
+    Double tourLength() {
         return edgesOrder.stream()
                 .map(SimpleEdge::getWeight)
                 .reduce(0.0, (acc, curr) -> acc + curr);
