@@ -1,6 +1,11 @@
 import org.jgrapht.graph.SimpleWeightedGraph;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,7 +34,7 @@ public class Simulation {
         }
     }
 
-    private Double newIteration() {
+    private Double newIteration() throws IOException {
         Set<City> cities = g.vertexSet();
         for (int i = 1; i < cities.size(); ++i) {
             for (Ant ant : ants) {
@@ -53,27 +58,43 @@ public class Simulation {
                 .map(a -> a.getTour().tourLength())
                 .min(Double::compare);
 
+        File myFoo = new File("tspdata/bestTour");
+        FileWriter fooWriter = new FileWriter(myFoo, false);
+        fooWriter.write(bestTour.toString());
+        fooWriter.close();
         ants.forEach(Ant::resetIteration);
         return min.get();
     }
 
-    Set<City> getCities() {
+    private Set<City> getCities() {
         return g.vertexSet();
     }
 
-    Set<SimpleEdge> getEdges() {
+    private Set<SimpleEdge> getEdges() {
         return g.edgeSet();
     }
 
-    public static void main(String[] args) throws IOException {
-        MainWindow window = MainWindow.getInstance();
-        Simulation s = new Simulation();
-        for (int i = 0; i < StaticUtils.maxIter; ++i) {
-            window.painGraph(s.getCities(), s.getEdges());
-            System.out.println(s.newIteration() - StaticUtils.optimal);
-        }
-        System.out.println("End");
-        System.exit(0);
+    private Tour getBestTour() {
+        return bestTour;
     }
 
+    public static void main(String[] args) throws IOException {
+        // MainWindow window = MainWindow.getInstance();
+        for (int iter = 0; iter < 99; iter++) {
+            Simulation s = new Simulation();
+            Double best = Double.MAX_VALUE;
+            for (int i = 0; i < StaticUtils.maxIter; ++i) {
+                // window.painGraph(s.getCities(), s.getEdges());
+                Double dist = s.newIteration();
+                if (dist < best) best = dist;
+                System.out.println(dist - StaticUtils.optimal);
+            }
+
+            Files.write(Paths.get("tspdata/experiment-as.txt"),
+                    ("" + (best - StaticUtils.optimal) + "\n").getBytes(),
+                    StandardOpenOption.APPEND);
+        }
+
+        // System.exit(0);
+    }
 }

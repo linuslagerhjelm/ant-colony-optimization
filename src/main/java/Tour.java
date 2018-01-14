@@ -48,4 +48,16 @@ public class Tour {
         edges.clear();
         cities.clear();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        edgesOrder.forEach(e -> {
+            sb.append(e.getStart().getIndex());
+            sb.append(" -> ");
+            sb.append(e.getEnd().getIndex());
+            sb.append("\n");
+        });
+        return sb.toString();
+    }
 }

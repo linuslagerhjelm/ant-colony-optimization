@@ -44,4 +44,8 @@ public class City {
     public int hashCode() {
         return index;
     }
+
+    public int getIndex() {
+        return index;
+    }
 }
