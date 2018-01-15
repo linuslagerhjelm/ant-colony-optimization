@@ -79,22 +79,13 @@ public class Simulation {
     }
 
     public static void main(String[] args) throws IOException {
-        // MainWindow window = MainWindow.getInstance();
-        for (int iter = 0; iter < 99; iter++) {
-            Simulation s = new Simulation();
-            Double best = Double.MAX_VALUE;
-            for (int i = 0; i < StaticUtils.maxIter; ++i) {
-                // window.painGraph(s.getCities(), s.getEdges());
-                Double dist = s.newIteration();
-                if (dist < best) best = dist;
-                System.out.println(dist - StaticUtils.optimal);
-            }
-
-            Files.write(Paths.get("tspdata/experiment-as.txt"),
-                    ("" + (best - StaticUtils.optimal) + "\n").getBytes(),
-                    StandardOpenOption.APPEND);
+        MainWindow window = MainWindow.getInstance();
+        Simulation s = new Simulation();
+        for (int i = 0; i < StaticUtils.maxIter; ++i) {
+            window.painGraph(s.getCities(), s.getEdges());
+            System.out.println(s.newIteration() - StaticUtils.optimal);
         }
 
-        // System.exit(0);
+        System.exit(0);
     }
 }
